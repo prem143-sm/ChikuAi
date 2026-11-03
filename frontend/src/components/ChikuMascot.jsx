@@ -3,8 +3,8 @@ export default function ChikuMascot({ expression = 'happy', size = 'regular' }) 
     <div className={`mascot-wrapper mascot-wrapper--${size} mascot-wrapper--${expression}`}>
       <img
         className="mascot-image"
-        src="/chiku-mascot.png"
-        alt="Chiku, a winking learning buddy"
+        src="/studiq-mascot.png"
+        alt="StudIQ, a winking learning buddy"
       />
     </div>
   );
