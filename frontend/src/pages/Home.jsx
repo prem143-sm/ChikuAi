@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import FeatureCard from '../components/FeatureCard';
-import ChikuMascot from '../components/ChikuMascot';
+import StudIQMascot from '../components/StudIQMascot';
 
 const FEATURES = [
   {
     icon: '💬',
-    title: 'Chat with Chiku',
+    title: 'Chat with StudIQ',
     description: 'Ask questions and get friendly answers.',
     route: 'chat',
   },
@@ -55,11 +55,11 @@ const FEATURES = [
 
 export default function Home({ onNavigate, language }) {
   const [suggestion, setSuggestion] = useState(
-    "Today's suggestion: Try Chat with Chiku!"
+    "Today's suggestion: Try Chat with StudIQ!"
   );
 
   const suggestions = [
-    "Today's suggestion: Try Chat with Chiku!",
+    "Today's suggestion: Try Chat with StudIQ!",
     "Today's suggestion: Explore Science Explorer!",
     "Today's suggestion: Play Maths Adventure!",
     "Today's suggestion: Read a Story!",
@@ -75,7 +75,7 @@ export default function Home({ onNavigate, language }) {
   return (
     <div style={containerStyle()}>
       <div style={headerStyle()}>
-        <ChikuMascot expression="happy" />
+        <StudIQMascot expression="happy" />
         <div>
           <h1 style={titleStyle()}>StudIQ Learning World</h1>
           <p style={subtitleStyle()}>Pick an adventure, {language} learner!</p>

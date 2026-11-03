@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import ChikuMascot from '../components/ChikuMascot';
+import StudIQMascot from '../components/StudIQMascot';
 
 export default function Welcome({ onStart, setLanguage }) {
   const [language, setLocalLanguage] = useState('english');
@@ -13,7 +13,7 @@ export default function Welcome({ onStart, setLanguage }) {
   return (
     <div style={containerStyle()}>
       <div style={cardStyle()}>
-        <ChikuMascot expression="happy" />
+        <StudIQMascot expression="happy" />
         <h1 style={titleStyle()}>Welcome to StudIQ! 👋</h1>
         <p style={subtitleStyle()}>
           Your friendly AI learning buddy.
@@ -42,7 +42,7 @@ export default function Welcome({ onStart, setLanguage }) {
         </button>
 
         <p style={privacyStyle()}>
-          Chiku is an AI learning companion. No personal information is needed to play.
+          StudIQ is an AI learning companion. No personal information is needed to play.
         </p>
       </div>
     </div>

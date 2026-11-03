@@ -4,7 +4,7 @@ A kid-friendly AI learning companion for children aged 6–10. Built with React,
 
 ## Features
 
-- **Chat with Chiku** — Friendly AI conversations (Hinglish + Simple English)
+- **Chat with StudIQ** — Friendly AI conversations (Hinglish + Simple English)
 - **Maths Adventure** — Addition, subtraction, multiplication practice
 - **Science Explorer** — Curated science facts about space, animals, plants
 - **English Practice** — Vocabulary with Hindi translations

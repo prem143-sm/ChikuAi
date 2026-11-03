@@ -27,7 +27,7 @@ const LOCAL_FAQ = [
   {
     keywords: ['hello', 'hi', 'hey', 'namaste'],
     reply:
-      "Hello! I'm Chiku, your AI learning buddy. What would you like to learn today?",
+      "Hello! I'm StudIQ, your AI learning buddy. What would you like to learn today?",
   },
 ];
 

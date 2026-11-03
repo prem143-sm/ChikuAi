@@ -26,7 +26,7 @@ When you use the chat feature with a configured Gemini API key:
 
 ## Safety
 
-- Chiku identifies itself as an AI, not a real person.
+- StudIQ identifies itself as an AI, not a real person.
 - Age-appropriate content filters are applied.
 - Unsafe requests receive a safe refusal response.
 - Children are encouraged to talk to trusted adults about serious concerns.

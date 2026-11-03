@@ -1,9 +1,9 @@
 export default function ChatMessage({ message, isUser, timestamp }) {
   return (
     <div
-      className={`chat-bubble ${isUser ? 'user' : 'chiku'}`}
+      className={`chat-bubble ${isUser ? 'user' : 'studiq'}`}
       role={isUser ? 'log' : 'log'}
-      aria-label={isUser ? 'You' : 'Chiku'}
+      aria-label={isUser ? 'You' : 'StudIQ'}
     >
       {message}
       {timestamp && (

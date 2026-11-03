@@ -1,4 +1,4 @@
-export default function ChikuMascot({ expression = 'happy', size = 'regular' }) {
+export default function StudIQMascot({ expression = 'happy', size = 'regular' }) {
   return (
     <div className={`mascot-wrapper mascot-wrapper--${size} mascot-wrapper--${expression}`}>
       <img

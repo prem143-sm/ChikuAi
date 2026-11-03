@@ -41,7 +41,7 @@ export default function Progress() {
         <h3 style={topicsTitleStyle()}>Topics Explored</h3>
         {progress.topicsExplored.length === 0 ? (
           <p style={emptyTopicsStyle()}>
-            No topics yet. Start exploring with Chiku!
+            No topics yet. Start exploring with StudIQ!
           </p>
         ) : (
           <div style={topicsListStyle()}>

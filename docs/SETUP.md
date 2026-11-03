@@ -19,7 +19,7 @@ npm --version
 ### 2. Open the Project Folder
 
 ```bash
-cd "D:\Projects\ChikuAi"
+cd "D:\Projects\StudIQ"
 ```
 
 ### 3. Backend Setup

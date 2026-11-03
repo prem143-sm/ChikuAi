@@ -121,7 +121,7 @@ export default function ChatWindow({ language }) {
       <div style={headerStyle()}>
         <div style={mascotStyle()}>🐣</div>
         <div>
-          <h2 style={titleStyle()}>Chiku</h2>
+          <h2 style={titleStyle()}>StudIQ</h2>
           <p style={statusStyle()}>
             {loading ? "Thinking..." : "Your AI learning buddy"}
           </p>

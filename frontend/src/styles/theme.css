@@ -135,7 +135,7 @@
   align-self: flex-end;
 }
 
-.chat-bubble.chiku {
+.chat-bubble.studiq {
   background: var(--mint-green);
   color: var(--dark-text);
   border-bottom-left-radius: 4px;

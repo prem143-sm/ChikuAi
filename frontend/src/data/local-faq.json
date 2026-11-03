@@ -1,7 +1,7 @@
 [
   {
     "keywords": ["who", "are", "you"],
-    "reply": "I'm Chiku, your AI learning buddy! I'm here to help you learn, play, and explore fun questions."
+    "reply": "I'm StudIQ, your AI learning buddy! I'm here to help you learn, play, and explore fun questions."
   },
   {
     "keywords": ["can", "you", "help"],
@@ -17,6 +17,6 @@
   },
   {
     "keywords": ["bye", "goodbye"],
-    "reply": "Bye-bye! Come back soon to learn more with Chiku!"
+    "reply": "Bye-bye! Come back soon to learn more with StudIQ!"
   }
 ]

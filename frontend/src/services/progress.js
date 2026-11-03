@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'chiku-progress';
+const STORAGE_KEY = 'StudIQ-progress';
 
 const DEFAULT_PROGRESS = {
   quizzesCompleted: 0,

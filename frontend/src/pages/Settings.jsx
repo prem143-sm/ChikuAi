@@ -65,7 +65,7 @@ export default function Settings({ language, setLanguage }) {
           <button
             onClick={() => {
               if (window.confirm('Reset all progress?')) {
-                localStorage.removeItem('chiku-progress');
+                localStorage.removeItem('StudIQ-progress');
                 window.location.reload();
               }
             }}

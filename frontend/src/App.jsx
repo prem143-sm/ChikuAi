@@ -10,7 +10,7 @@ import BrainGym from './pages/BrainGym';
 import StoryTime from './pages/StoryTime';
 import Progress from './pages/Progress';
 import Settings from './pages/Settings';
-import ChikuMascot from './components/ChikuMascot';
+import StudIQMascot from './components/StudIQMascot';
 
 const ROUTES = {
   WELCOME: 'welcome',
@@ -32,7 +32,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <ChikuMascot expression="happy" />
+      <StudIQMascot expression="happy" />
       {page === ROUTES.WELCOME && (
         <Welcome onStart={setHome} setLanguage={setLanguage} />
       )}
