@@ -1,3 +1,2 @@
-// Vercel catch-all serverless function. It exposes the existing Express API
-// at /api/health and /api/chat without exposing any provider credentials.
+// Vercel catch-all serverless function for the Express API.
 module.exports = require('../backend/src/app');

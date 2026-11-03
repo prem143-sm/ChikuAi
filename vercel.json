@@ -5,6 +5,9 @@
   "functions": {
     "api/[...path].js": {
       "maxDuration": 30
+    },
+    "api/activities/generate.js": {
+      "maxDuration": 30
     }
   }
 }
