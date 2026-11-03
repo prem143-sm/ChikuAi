@@ -1,0 +1,22 @@
+[
+  {
+    "keywords": ["who", "are", "you"],
+    "reply": "I'm Chiku, your AI learning buddy! I'm here to help you learn, play, and explore fun questions."
+  },
+  {
+    "keywords": ["can", "you", "help"],
+    "reply": "Yes! I can help with maths, science, English, stories, riddles, and lots more. What would you like to learn?"
+  },
+  {
+    "keywords": ["are", "you", "real"],
+    "reply": "I'm an AI, not a real person. But I can still be your friendly learning companion!"
+  },
+  {
+    "keywords": ["password", "secret"],
+    "reply": "Please don't share passwords or secrets in chat. Keep them safe with a trusted adult."
+  },
+  {
+    "keywords": ["bye", "goodbye"],
+    "reply": "Bye-bye! Come back soon to learn more with Chiku!"
+  }
+]

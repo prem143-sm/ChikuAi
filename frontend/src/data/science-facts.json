@@ -1,0 +1,37 @@
+[
+  {
+    "id": "f1",
+    "topic": "space",
+    "title": "The Sun is a Star",
+    "text": "The Sun is actually a star! It's the closest star to Earth. It gives us light and warmth every day.",
+    "question": "Can you see the Sun at night?"
+  },
+  {
+    "id": "f2",
+    "topic": "animals",
+    "title": "Elephants Remember",
+    "text": "Elephants have very good memories. They can remember where to find water even after many years.",
+    "question": "What is your favorite animal?"
+  },
+  {
+    "id": "f3",
+    "topic": "plants",
+    "title": "Plants Drink Water",
+    "text": "Plants drink water through their roots, just like you drink through a straw. They also breathe through their leaves!",
+    "question": "Do you help water plants at home?"
+  },
+  {
+    "id": "f4",
+    "topic": "weather",
+    "title": "Where Rain Comes From",
+    "text": "Clouds are made of tiny water drops. When the drops get heavy, they fall down as rain.",
+    "question": "Do you like playing in the rain?"
+  },
+  {
+    "id": "f5",
+    "topic": "earth",
+    "title": "The Moon",
+    "text": "The Moon is Earth's neighbor in space. It doesn't make its own light — it reflects the Sun's light.",
+    "question": "Have you seen the Moon at night?"
+  }
+]

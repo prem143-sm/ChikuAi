@@ -1,0 +1,122 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Poppins', 'Fredoka', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(180deg, #FFF9EE 0%, #F3E8D3 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: #26324A;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+  border: none;
+  background: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+input, textarea {
+  font-family: inherit;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Fredoka', 'Poppins', sans-serif;
+}
+
+.mascot-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.mascot-wrapper--regular {
+  width: 148px;
+  height: 148px;
+  margin: 0 auto;
+}
+
+.mascot-wrapper--small {
+  width: 52px;
+  height: 52px;
+}
+
+.mascot-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 10px rgba(38, 50, 74, 0.16));
+  animation: mascot-float 3s ease-in-out infinite;
+}
+
+.mascot-wrapper--thinking .mascot-image {
+  animation-duration: 1.8s;
+}
+
+@keyframes mascot-float {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-5px) rotate(1deg); }
+}
+
+/* Accessibility: focus visible */
+*:focus-visible {
+  outline: 3px solid #FFD95A;
+  outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+ .app-home-button {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 10;
+  border: 2px solid #70C9FF;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #26324A;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  padding: 10px 14px;
+  box-shadow: 0 3px 10px rgba(38, 50, 74, 0.16);
+ }
+
+ .app-home-button:focus-visible,
+ button:focus-visible,
+ input:focus-visible,
+ .feature-card:focus-visible {
+  outline: 3px solid #B7A4FF;
+  outline-offset: 3px;
+ }

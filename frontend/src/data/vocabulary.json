@@ -1,0 +1,32 @@
+[
+  {
+    "word": "Apple",
+    "hindi": "सेब",
+    "sentence": "I eat a red apple.",
+    "hindiSentence": "मैं एक लाल सेब खाता हूँ।"
+  },
+  {
+    "word": "Cat",
+    "hindi": "बिल्ली",
+    "sentence": "The cat is sleeping.",
+    "hindiSentence": "बिल्ली सो रही है।"
+  },
+  {
+    "word": "Sun",
+    "hindi": "सूरज",
+    "sentence": "The sun is bright.",
+    "hindiSentence": "सूरज बहुत चमकीला है।"
+  },
+  {
+    "word": "Book",
+    "hindi": "किताब",
+    "sentence": "I like reading books.",
+    "hindiSentence": "मुझे किताबें पढ़ना पसंद है।"
+  },
+  {
+    "word": "Friend",
+    "hindi": "दोस्त",
+    "sentence": "Chiku is my friend.",
+    "hindiSentence": "चिकु मेरा दोस्त है।"
+  }
+]

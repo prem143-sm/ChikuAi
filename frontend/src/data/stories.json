@@ -1,0 +1,26 @@
+[
+  {
+    "id": "s1",
+    "title": "The Brave Little Rabbit",
+    "readingLevel": "easy",
+    "text": "Once there was a little rabbit named Pip. Pip was small but very brave. One day, Pip saw a big storm coming. All the other animals were scared. But Pip hopped to the hill and showed everyone a safe cave to hide in. The animals were safe because Pip was brave and kind. Everyone cheered for Pip!",
+    "moral": "Being brave means helping others, even when you are small.",
+    "discussionQuestion": "When have you been brave like Pip?"
+  },
+  {
+    "id": "s2",
+    "title": "The Curious Star",
+    "readingLevel": "easy",
+    "text": "Tara was a little star who wanted to see the Earth up close. Every night, she watched children playing below. One night, Tara twinkled very brightly to say hello. A little girl saw her and waved. Tara felt happy. She learned that even small stars can bring big smiles.",
+    "moral": "You can make someone happy with a small, kind gesture.",
+    "discussionQuestion": "How can you make someone smile today?"
+  },
+  {
+    "id": "s3",
+    "title": "Chiku and the Lost Button",
+    "readingLevel": "medium",
+    "text": "Chiku found a shiny blue button on the path. 'Someone must be looking for this,' Chiku said. Chiku asked the fox, the owl, and the bear. None of them had lost a button. Then Chiku met a sad turtle. 'I lost my favorite button!' the turtle said. Chiku gave it back. The turtle smiled a big turtle smile.",
+    "moral": "Honesty means giving things back to their owner.",
+    "discussionQuestion": "What would you do if you found something that wasn't yours?"
+  }
+]
