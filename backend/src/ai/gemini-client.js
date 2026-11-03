@@ -1,5 +1,5 @@
 /**
- * Gemini API client for Chiku AI.
+ * Gemini API client for StudIQ.
  * The API key is read only by the backend and is never returned to the browser.
  */
 

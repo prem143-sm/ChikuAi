@@ -1,5 +1,5 @@
 /**
- * Centralized error handler for Chiku AI backend.
+ * Centralized error handler for StudIQ backend.
  *
  * Returns safe, predictable error responses without exposing internal
  * details or secrets to the frontend.

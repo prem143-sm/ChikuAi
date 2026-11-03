@@ -1,5 +1,5 @@
 /**
- * Application-level response validation and safety checks for Chiku AI.
+ * Application-level response validation and safety checks for StudIQ.
  *
  * Ensures replies are child-safe, within length limits, and free of
  * obviously unsafe patterns before they reach the frontend.

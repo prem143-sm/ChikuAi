@@ -1,4 +1,4 @@
-# Chiku AI — Testing Guide
+# StudIQ — Testing Guide
 
 ## Manual Testing Checklist
 

@@ -77,7 +77,7 @@ export default function Home({ onNavigate, language }) {
       <div style={headerStyle()}>
         <ChikuMascot expression="happy" />
         <div>
-          <h1 style={titleStyle()}>Chiku's Learning World</h1>
+          <h1 style={titleStyle()}>StudIQ Learning World</h1>
           <p style={subtitleStyle()}>Pick an adventure, {language} learner!</p>
         </div>
         <button style={settingsButtonStyle()} onClick={() => onNavigate('settings')} aria-label="Settings">

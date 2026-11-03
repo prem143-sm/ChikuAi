@@ -77,7 +77,7 @@ export default function Settings({ language, setLanguage }) {
       </div>
 
       <div style={footerStyle()}>
-        <p>Chiku AI is for children aged 6–10. Always supervise online activity.</p>
+        <p>StudIQ is for children aged 6–10. Always supervise online activity.</p>
       </div>
     </div>
   );

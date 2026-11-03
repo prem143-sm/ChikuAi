@@ -1,7 +1,7 @@
 {
-  "name": "chiku-ai-backend",
+  "name": "studiq-backend",
   "version": "1.0.0",
-  "description": "Backend for Chiku AI - kid-friendly AI learning companion",
+  "description": "Backend for StudIQ - kid-friendly AI learning companion",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",

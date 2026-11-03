@@ -7,7 +7,7 @@ router.get('/', (_req, res) => {
   res.json({
     success: true,
     status: 'ok',
-    service: 'chiku-ai-backend',
+    service: 'studiq-backend',
     aiConfigured,
     localFallback: true,
     timestamp: new Date().toISOString(),

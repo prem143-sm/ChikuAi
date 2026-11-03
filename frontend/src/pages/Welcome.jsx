@@ -14,7 +14,7 @@ export default function Welcome({ onStart, setLanguage }) {
     <div style={containerStyle()}>
       <div style={cardStyle()}>
         <ChikuMascot expression="happy" />
-        <h1 style={titleStyle()}>Welcome to Chiku AI! 👋</h1>
+        <h1 style={titleStyle()}>Welcome to StudIQ! 👋</h1>
         <p style={subtitleStyle()}>
           Your friendly AI learning buddy.
         </p>

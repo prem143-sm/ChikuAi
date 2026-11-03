@@ -8,7 +8,7 @@ const HOST = '0.0.0.0';
 const server = app.listen(PORT, HOST, () => {
   const aiConfigured = !!process.env.GEMINI_API_KEY;
   console.log(`\n========================================`);
-  console.log(`  Chiku AI Backend running`);
+  console.log(`  StudIQ Backend running`);
   console.log(`  Server: http://${HOST}:${PORT}`);
   console.log(`  Health: http://${HOST}:${PORT}/api/health`);
   console.log(`  Gemini AI: ${aiConfigured ? 'CONFIGURED' : 'NOT CONFIGURED (local mode only)'}`);

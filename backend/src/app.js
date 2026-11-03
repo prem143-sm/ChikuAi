@@ -26,7 +26,7 @@ app.use(
 );
 
 app.get('/', (req, res) => {
-  res.json({ name: 'Chiku AI Backend', status: 'ok' });
+  res.json({ name: 'StudIQ Backend', status: 'ok' });
 });
 
 app.use('/api/health', healthRoutes);

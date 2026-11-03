@@ -1,5 +1,5 @@
 /**
- * Request validation middleware for Chiku AI chat endpoint.
+ * Request validation middleware for StudIQ chat endpoint.
  */
 
 function validateChatRequest(req, res, next) {

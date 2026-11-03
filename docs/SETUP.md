@@ -1,8 +1,8 @@
-# Chiku AI — Setup Guide
+# StudIQ — Setup Guide
 
 ## Overview
 
-Chiku AI is a local-first educational application for children aged 6–10. It runs on a Windows laptop with a React + Vite frontend and a Node.js + Express backend.
+StudIQ is a local-first educational application for children aged 6–10. It runs on a Windows laptop with a React + Vite frontend and a Node.js + Express backend.
 
 ## Step-by-Step Installation
 

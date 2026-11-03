@@ -1,4 +1,4 @@
-# Chiku AI
+# StudIQ
 
 A kid-friendly AI learning companion for children aged 6–10. Built with React, Vite, Node.js, Express, and Gemini.
 
@@ -19,7 +19,7 @@ A kid-friendly AI learning companion for children aged 6–10. Built with React,
 ## Architecture
 
 ```
-chiku-ai/
+studiq/
   frontend/          React + Vite frontend
   backend/           Node.js + Express backend
   docs/              Setup, privacy, and testing docs

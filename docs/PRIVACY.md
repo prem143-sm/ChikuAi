@@ -1,8 +1,8 @@
-# Chiku AI — Privacy Notice
+# StudIQ — Privacy Notice
 
 ## Who This Is For
 
-Chiku AI is designed for children aged 6–10. It is a local-first learning companion.
+StudIQ is designed for children aged 6–10. It is a local-first learning companion.
 
 ## What We Collect
 

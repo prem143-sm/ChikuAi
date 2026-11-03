@@ -2,7 +2,7 @@
 ## Grok-Powered, Kid-Friendly AI Learning Companion
 ### Master Prompt for Codex
 
-**Project Name:** Chiku AI  
+**Project Name:** StudIQ  
 **Product Type:** Local-first AI learning chatbot for children  
 **Target Age:** 6–10 years  
 **AI Provider:** Grok by xAI  
@@ -19,7 +19,7 @@
 
 Act as a senior full-stack developer, AI application engineer, child-focused UX designer, API integration specialist, and software tester.
 
-Build a complete working application called **Chiku AI**.
+Build a complete working application called **StudIQ**.
 
 Do not create only a landing page, static mockup, or frontend demo. Implement a functional application with a frontend, backend, Grok API integration, local educational content, error handling, persistent progress, and a complete local setup guide.
 
@@ -42,7 +42,7 @@ If a requirement cannot be completed, explain the limitation and implement the s
 
 # 2. PROJECT VISION
 
-Chiku AI should feel like a friendly learning buddy for children, not a formal question-answering machine.
+StudIQ should feel like a friendly learning buddy for children, not a formal question-answering machine.
 
 Children should be able to ask questions, learn school subjects, play educational games, listen to stories, practice English, explore general knowledge, and receive encouraging explanations.
 
@@ -831,7 +831,7 @@ Do not ask the child to enter or manage API credentials.
 
 Use a clean and maintainable structure similar to:
 
-chiku-ai/
+studiq/
   frontend/
     src/
       components/
@@ -1265,7 +1265,7 @@ Do not implement expensive or complex features before the core application works
 
 # 22. FINAL INSTRUCTIONS TO CODEX
 
-Build Chiku AI as a functional local-first educational application, not a static prototype.
+Build StudIQ as a functional local-first educational application, not a static prototype.
 
 Use Grok as the optional conversational AI provider, but preserve local learning features when the API is unavailable.
 
@@ -1295,6 +1295,6 @@ At the end, provide:
 
 ## Definition of success
 
-Chiku AI is successful when a child can open the local website, ask a basic educational question, receive a friendly answer from Grok when configured, play local learning games without Grok, and use the application without seeing technical errors or private API credentials.
+StudIQ is successful when a child can open the local website, ask a basic educational question, receive a friendly answer from Grok when configured, play local learning games without Grok, and use the application without seeing technical errors or private API credentials.
 
 **End of Master Project Specification.**

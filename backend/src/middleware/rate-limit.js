@@ -1,5 +1,5 @@
 /**
- * Chat-specific rate limiting for Chiku AI.
+ * Chat-specific rate limiting for StudIQ.
  *
  * Limits chat requests to protect the Gemini API quota and prevent abuse.
  */

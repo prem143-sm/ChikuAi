@@ -1,5 +1,5 @@
 /**
- * Chiku AI Personality Configuration
+ * StudIQ Personality Configuration
  * Versioned system instruction for the Gemini-powered chat.
  *
  * This file defines Chiku's personality, safety rules, and conversation style.
