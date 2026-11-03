@@ -4,7 +4,7 @@ import ChatMessage from './ChatMessage';
 import ChatComposer from './ChatComposer';
 import VoiceControls from './VoiceControls';
 
-export default function ChatWindow({ language }) {
+export default function ChatWindow({ language, onDashboard }) {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [lastFailedMessage, setLastFailedMessage] = useState(null);
@@ -119,6 +119,9 @@ export default function ChatWindow({ language }) {
   return (
     <div style={containerStyle()}>
       <div style={headerStyle()}>
+        <button onClick={onDashboard} style={dashboardButtonStyle()}>
+          ← Back to dashboard
+        </button>
         <div style={mascotStyle()}>🐣</div>
         <div>
           <h2 style={titleStyle()}>StudIQ</h2>
@@ -200,11 +203,26 @@ export default function ChatWindow({ language }) {
   function headerStyle() {
     return {
       display: 'flex',
+      flexWrap: 'wrap',
       alignItems: 'center',
       gap: '12px',
       padding: '16px 24px',
       background: '#fff',
       borderBottom: '1px solid rgba(38,50,74,0.08)',
+    };
+  }
+
+  function dashboardButtonStyle() {
+    return {
+      flex: '0 0 auto',
+      border: '2px solid #70C9FF',
+      borderRadius: '999px',
+      background: '#fff',
+      color: '#26324A',
+      font: 'inherit',
+      fontWeight: 700,
+      padding: '10px 14px',
+      boxShadow: '0 3px 10px rgba(38, 50, 74, 0.16)',
     };
   }
 

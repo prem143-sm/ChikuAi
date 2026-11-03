@@ -37,7 +37,7 @@ export default function App() {
         <Welcome onStart={setHome} setLanguage={setLanguage} />
       )}
       {page === ROUTES.HOME && <Home onNavigate={setPage} language={language} />}
-      {page === ROUTES.CHAT && <Chat language={language} />}
+      {page === ROUTES.CHAT && <Chat language={language} onDashboard={() => setPage(ROUTES.HOME)} />}
       {page === ROUTES.MATHS && <MathsAdventure language={language} />}
       {page === ROUTES.SCIENCE && <ScienceExplorer language={language} />}
       {page === ROUTES.ENGLISH && <EnglishPractice language={language} />}
@@ -46,7 +46,7 @@ export default function App() {
       {page === ROUTES.STORY && <StoryTime language={language} />}
       {page === ROUTES.PROGRESS && <Progress />}
       {page === ROUTES.SETTINGS && <Settings language={language} setLanguage={setLanguage} />}
-      {page !== ROUTES.WELCOME && page !== ROUTES.HOME && (
+      {page !== ROUTES.WELCOME && page !== ROUTES.HOME && page !== ROUTES.CHAT && (
         <button className="app-home-button" onClick={() => setPage(ROUTES.HOME)}>
           ← Back to dashboard
         </button>

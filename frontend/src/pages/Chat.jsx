@@ -1,5 +1,5 @@
 import ChatWindow from '../components/ChatWindow';
 
-export default function Chat({ language }) {
-  return <ChatWindow language={language} />;
+export default function Chat({ language, onDashboard }) {
+  return <ChatWindow language={language} onDashboard={onDashboard} />;
 }
