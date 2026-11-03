@@ -1,55 +1,62 @@
-import { useState } from 'react';
-import riddles from '../data/riddles.json';
+import { useEffect, useState } from 'react';
+import useGeneratedActivity from '../hooks/useGeneratedActivity';
+import { recordActivity } from '../services/progress';
 
-export default function BrainGym({ language }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+export default function BrainGym({ language, grade, user }) {
   const [showAnswer, setShowAnswer] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [actionError, setActionError] = useState('');
+  const { item: riddle, loading, error, refresh } = useGeneratedActivity('brain', grade, language, user);
 
-  const riddle = riddles[currentIndex];
+  useEffect(() => setShowAnswer(false), [riddle]);
+
+  async function nextRiddle() {
+    setActionError('');
+    if (!showAnswer || saving || loading) return;
+    setSaving(true);
+    try {
+      await recordActivity('Logic and riddles', user, 'brain', grade);
+      setShowAnswer(false);
+      refresh();
+    } catch (saveError) {
+      setActionError(`Your progress could not be saved: ${saveError.message}`);
+    } finally {
+      setSaving(false);
+    }
+  }
 
   return (
-    <div style={containerStyle()}>
-      <div style={headerStyle()}>
+    <div className="page-shell activity-page" style={containerStyle()}>
+      <div className="activity-header" style={headerStyle()}>
         <h1 style={titleStyle()}>Brain Gym 🧩</h1>
+        <p>Fresh Gemini puzzles for grade {grade}</p>
       </div>
 
-      <div style={cardStyle()}>
-        <div style={riddleTextStyle()}>{riddle.question}</div>
-        <button
-          onClick={() => setShowAnswer(!showAnswer)}
-          style={toggleButtonStyle()}
-        >
-          {showAnswer ? 'Hide Answer' : 'Show Answer'}
-        </button>
-        {showAnswer && (
+      <div className="activity-card" style={cardStyle()}>
+        {loading && <p role="status">Creating a fresh puzzle…</p>}
+        {error && <div role="alert"><p>{error}</p><button onClick={refresh} style={navButtonStyle()}>Try again</button></div>}
+        {riddle && !loading && (
           <>
-            <div style={answerStyle()}>
-              <strong>Answer:</strong> {riddle.answer}
-            </div>
-            <div style={hintStyle()}>
-              <strong>Hint:</strong> {riddle.hint}
-            </div>
+            <div style={riddleTextStyle()}>{riddle.question}</div>
+            <button onClick={() => setShowAnswer((visible) => !visible)} style={toggleButtonStyle()}>
+              {showAnswer ? 'Hide Answer' : 'Show Answer'}
+            </button>
+            {showAnswer && (
+              <>
+                <div style={answerStyle()}><strong>Answer:</strong> {riddle.answer}</div>
+                <div style={hintStyle()}><strong>Hint:</strong> {riddle.hint}</div>
+              </>
+            )}
           </>
         )}
       </div>
 
       <div style={navStyle()}>
-        <button
-          onClick={() => setCurrentIndex((i) => (i === 0 ? riddles.length - 1 : i - 1))}
-          style={navButtonStyle()}
-        >
-          ← Previous
-        </button>
-        <span style={counterStyle()}>
-          {currentIndex + 1} of {riddles.length}
-        </span>
-        <button
-          onClick={() => setCurrentIndex((i) => (i === riddles.length - 1 ? 0 : i + 1))}
-          style={navButtonStyle()}
-        >
-          Next →
+        <button onClick={nextRiddle} disabled={loading || saving || !riddle || !showAnswer} style={navButtonStyle()}>
+          {saving ? 'Saving…' : 'Solve this — Next puzzle →'}
         </button>
       </div>
+      {actionError && <p role="alert" style={hintStyle()}>{actionError}</p>}
     </div>
   );
 
@@ -66,6 +73,8 @@ export default function BrainGym({ language }) {
   function headerStyle() {
     return {
       marginBottom: '24px',
+      textAlign: 'center',
+      color: '#6B7280',
     };
   }
 
@@ -154,10 +163,4 @@ export default function BrainGym({ language }) {
     };
   }
 
-  function counterStyle() {
-    return {
-      fontWeight: '600',
-      color: '#26324A',
-    };
-  }
 }

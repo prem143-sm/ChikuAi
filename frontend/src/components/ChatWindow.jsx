@@ -117,12 +117,12 @@ export default function ChatWindow({ language, onDashboard }) {
   ];
 
   return (
-    <div style={containerStyle()}>
-      <div style={headerStyle()}>
+    <div className="chat-page" style={containerStyle()}>
+      <div className="chat-header" style={headerStyle()}>
         <button onClick={onDashboard} style={dashboardButtonStyle()}>
           ← Back to dashboard
         </button>
-        <div style={mascotStyle()}>🐣</div>
+        <div className="chat-mascot" style={mascotStyle()}>🐣</div>
         <div>
           <h2 style={titleStyle()}>StudIQ</h2>
           <p style={statusStyle()}>
@@ -134,7 +134,7 @@ export default function ChatWindow({ language, onDashboard }) {
         </button>
       </div>
 
-      <div style={messagesContainerStyle()}>
+      <div className="chat-messages" style={messagesContainerStyle()}>
         {messages.length === 0 && (
           <div style={emptyStyle()}>
             <p>Ask me anything!</p>
@@ -164,7 +164,7 @@ export default function ChatWindow({ language, onDashboard }) {
         onStop={handleStop}
       />
 
-      <div style={suggestionsStyle()}>
+      <div className="chat-suggestions" style={suggestionsStyle()}>
         {suggestedQuestions.map((q, i) => (
           <button
             key={i}
@@ -177,7 +177,7 @@ export default function ChatWindow({ language, onDashboard }) {
       </div>
 
       {lastFailedMessage && (
-        <button onClick={() => handleSend(lastFailedMessage)} style={retryButtonStyle()}>
+        <button className="chat-retry-button" onClick={() => handleSend(lastFailedMessage)} style={retryButtonStyle()}>
           Retry last question
         </button>
       )}

@@ -1,0 +1,49 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function owns(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    match /users/{userId}/progress/{progressId} {
+      allow read: if owns(userId);
+      allow create, update: if owns(userId)
+        && progressId == 'summary'
+        && request.resource.data.keys().hasOnly([
+          'quizzesCompleted',
+          'correctAnswers',
+          'activitiesCompleted',
+          'topicsExplored',
+          'activityCounts',
+          'grade',
+          'completedQuizIds',
+          'updatedAt',
+          'lastActivityAt',
+          'lastQuiz'
+        ])
+        && request.resource.data.quizzesCompleted is int
+        && request.resource.data.correctAnswers is int
+        && request.resource.data.activitiesCompleted is int
+        && request.resource.data.topicsExplored is list
+        && request.resource.data.activityCounts is map
+        && request.resource.data.completedQuizIds is list
+        && request.resource.data.completedQuizIds.size() <= 100
+        && request.resource.data.grade in ['5', '6', '7', '8', '9'];
+      allow delete: if owns(userId);
+    }
+
+    match /users/{userId}/recent/{activityId} {
+      allow read: if owns(userId);
+      allow create, update: if owns(userId)
+        && activityId in ['maths', 'science', 'english', 'quiz', 'brain', 'story']
+        && request.resource.data.keys().hasOnly(['items', 'updatedAt'])
+        && request.resource.data.items is list
+        && request.resource.data.items.size() <= 100;
+      allow delete: if owns(userId);
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

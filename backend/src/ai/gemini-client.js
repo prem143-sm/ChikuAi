@@ -11,7 +11,7 @@ function getGenerateContentUrl(apiUrl, model) {
   return `${baseUrl}/models/${encodeURIComponent(model)}:generateContent`;
 }
 
-function buildGeminiRequest(systemInstruction, messages) {
+function buildGeminiRequest(systemInstruction, messages, generationConfig = {}) {
   return {
     systemInstruction: { parts: [{ text: systemInstruction }] },
     contents: messages.map(({ role, content }) => ({
@@ -21,6 +21,7 @@ function buildGeminiRequest(systemInstruction, messages) {
     generationConfig: {
       temperature: 0.7,
       maxOutputTokens: 400,
+      ...generationConfig,
     },
   };
 }
@@ -32,7 +33,15 @@ function extractTextFromResponse(responseJson) {
   return text || null;
 }
 
-async function callGemini({ apiKey, apiUrl, model, systemInstruction, messages }) {
+async function callGemini({
+  apiKey,
+  apiUrl,
+  model,
+  systemInstruction,
+  messages,
+  generationConfig,
+  maxResponseChars = MAX_RESPONSE_CHARS,
+}) {
   if (typeof fetch !== 'function') {
     return { success: false, error: 'This Node.js version does not provide fetch.', status: 500 };
   }
@@ -47,7 +56,7 @@ async function callGemini({ apiKey, apiUrl, model, systemInstruction, messages }
         'Content-Type': 'application/json',
         'x-goog-api-key': apiKey,
       },
-      body: JSON.stringify(buildGeminiRequest(systemInstruction, messages)),
+      body: JSON.stringify(buildGeminiRequest(systemInstruction, messages, generationConfig)),
       signal: controller.signal,
     });
 
@@ -60,7 +69,7 @@ async function callGemini({ apiKey, apiUrl, model, systemInstruction, messages }
       return { success: false, error: 'Empty or unreadable response from AI provider.', status: 502 };
     }
 
-    return { success: true, reply: text.slice(0, MAX_RESPONSE_CHARS).trim(), provider: 'gemini' };
+    return { success: true, reply: text.slice(0, maxResponseChars).trim(), provider: 'gemini' };
   } catch (err) {
     if (err.name === 'AbortError') return { success: false, error: 'The AI provider took too long to respond.', status: 504 };
     return { success: false, error: 'Unable to reach the AI provider.', status: 503 };

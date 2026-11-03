@@ -19,4 +19,19 @@ export const api = {
     }
     return res.json();
   },
+
+  async generateActivity(activity, grade, language, excludedLabels, difficulty) {
+    const res = await fetch(`${API_BASE}/activities/generate`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ activity, grade, language, excludedLabels, difficulty }),
+    });
+    const result = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const error = new Error(result.error || 'Could not generate a fresh activity.');
+      error.status = res.status;
+      throw error;
+    }
+    return result;
+  },
 };

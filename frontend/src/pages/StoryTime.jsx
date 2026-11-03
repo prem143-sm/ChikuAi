@@ -1,52 +1,58 @@
 import { useState } from 'react';
-import stories from '../data/stories.json';
+import useGeneratedActivity from '../hooks/useGeneratedActivity';
+import { recordActivity } from '../services/progress';
 
-export default function StoryTime({ language }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+export default function StoryTime({ language, grade, user }) {
+  const [actionError, setActionError] = useState('');
+  const [saving, setSaving] = useState(false);
+  const { item: story, loading, error, refresh } = useGeneratedActivity('story', grade, language, user);
 
-  const story = stories[currentIndex];
+  async function nextStory() {
+    if (saving || loading) return;
+    setActionError('');
+    if (!story) return;
+    setSaving(true);
+    try {
+      await recordActivity('Story time', user, 'story', grade);
+      refresh();
+    } catch (saveError) {
+      setActionError(`Your progress could not be saved: ${saveError.message}`);
+    } finally {
+      setSaving(false);
+    }
+  }
 
   return (
-    <div style={containerStyle()}>
-      <div style={headerStyle()}>
+    <div className="page-shell activity-page" style={containerStyle()}>
+      <div className="activity-header" style={headerStyle()}>
         <h1 style={titleStyle()}>Story Time 📖</h1>
+        <p>Fresh Gemini stories for grade {grade}</p>
       </div>
 
-      <div style={cardStyle()}>
-        <div style={storyTitleStyle()}>{story.title}</div>
-        <div style={readingLevelStyle()}>
-          Reading Level: {story.readingLevel}
-        </div>
-        <div style={storyTextStyle()}>{story.text}</div>
-        {story.moral && (
-          <div style={moralStyle()}>
-            <strong>Moral:</strong> {story.moral}
-          </div>
-        )}
-        {story.discussionQuestion && (
-          <div style={discussionStyle()}>
-            <strong>💬 Talk about it:</strong> {story.discussionQuestion}
-          </div>
+      <div className="activity-card story-card" style={cardStyle()}>
+        {loading && <p role="status">Creating a fresh story…</p>}
+        {error && <div role="alert"><p>{error}</p><button onClick={refresh} style={navButtonStyle()}>Try again</button></div>}
+        {story && !loading && (
+          <>
+            <div style={storyTitleStyle()}>{story.title}</div>
+            <div style={readingLevelStyle()}>Grade {grade} · {story.readingLevel}</div>
+            <div style={storyTextStyle()}>{story.text}</div>
+            {story.moral && <div style={moralStyle()}><strong>Story lesson:</strong> {story.moral}</div>}
+            {story.discussionQuestion && (
+              <div style={discussionStyle()}>
+                <strong>💬 Talk about it:</strong> {story.discussionQuestion}
+              </div>
+            )}
+          </>
         )}
       </div>
 
       <div style={navStyle()}>
-        <button
-          onClick={() => setCurrentIndex((i) => (i === 0 ? stories.length - 1 : i - 1))}
-          style={navButtonStyle()}
-        >
-          ← Previous
-        </button>
-        <span style={counterStyle()}>
-          {currentIndex + 1} of {stories.length}
-        </span>
-        <button
-          onClick={() => setCurrentIndex((i) => (i === stories.length - 1 ? 0 : i + 1))}
-          style={navButtonStyle()}
-        >
-          Next →
+        <button onClick={nextStory} disabled={loading || saving || !story} style={navButtonStyle()}>
+          {saving ? 'Saving…' : 'I finished reading — Next story →'}
         </button>
       </div>
+      {actionError && <p role="alert" style={discussionStyle()}>{actionError}</p>}
     </div>
   );
 
@@ -63,6 +69,8 @@ export default function StoryTime({ language }) {
   function headerStyle() {
     return {
       marginBottom: '24px',
+      textAlign: 'center',
+      color: '#6B7280',
     };
   }
 
@@ -161,10 +169,4 @@ export default function StoryTime({ language }) {
     };
   }
 
-  function counterStyle() {
-    return {
-      fontWeight: '600',
-      color: '#26324A',
-    };
-  }
 }

@@ -1,101 +1,117 @@
 import { useEffect, useState } from 'react';
+import useGeneratedActivity from '../hooks/useGeneratedActivity';
 import { recordActivity } from '../services/progress';
 
-const LEVELS = {
-  easy: { name: 'Easy', max: 10 },
-  medium: { name: 'Medium', max: 20 },
-  challenging: { name: 'Challenging', max: 50 },
-};
+const DIFFICULTIES = ['easy', 'medium', 'challenging'];
 
-export default function MathsAdventure({ language }) {
-  const [level, setLevel] = useState('easy');
-  const [question, setQuestion] = useState(null);
+export default function MathsAdventure({ language, grade, user }) {
+  const [difficulty, setDifficulty] = useState('easy');
   const [answer, setAnswer] = useState('');
   const [feedback, setFeedback] = useState('');
+  const [actionError, setActionError] = useState('');
   const [score, setScore] = useState(0);
   const [attempts, setAttempts] = useState(0);
-
-  function generateQuestion() {
-    const max = LEVELS[level].max;
-    const a = Math.floor(Math.random() * max) + 1;
-    const b = Math.floor(Math.random() * max) + 1;
-    const ops = ['+', '-', '×'];
-    const op = ops[Math.floor(Math.random() * ops.length)];
-
-    let correct;
-    let text;
-    if (op === '+') {
-      correct = a + b;
-      text = `${a} + ${b} = ?`;
-    } else if (op === '-') {
-      const bigger = Math.max(a, b);
-      const smaller = Math.min(a, b);
-      correct = bigger - smaller;
-      text = `${bigger} - ${smaller} = ?`;
-    } else {
-      correct = (a % 10) * (b % 10);
-      text = `${a % 10} × ${b % 10} = ?`;
-    }
-
-    setQuestion({ text, correct });
-    setAnswer('');
-    setFeedbackState('');
-  }
-
-  function checkAnswer() {
-    if (!question) return;
-    const num = parseInt(answer, 10);
-    setAttempts((prev) => prev + 1);
-    if (num === question.correct) {
-      setScore((prev) => prev + 1);
-      recordActivity('Maths');
-      setFeedback("Correct! Great job! 🎉");
-      setTimeout(generateQuestion, 1500);
-    } else {
-      setFeedback(
-        `Not quite! The answer is ${question.correct}. Let's try again!`
-      );
-    }
-  }
+  const [answered, setAnswered] = useState(false);
+  const { item: question, loading, error, refresh } = useGeneratedActivity(
+    'maths',
+    grade,
+    language,
+    user,
+    difficulty
+  );
 
   useEffect(() => {
-    generateQuestion();
-  }, [level]);
+    setAnswer('');
+    setFeedback('');
+    setAnswered(false);
+  }, [question]);
+
+  async function checkAnswer() {
+    if (!question || answered || answer.trim() === '') return;
+    setAttempts((count) => count + 1);
+    setAnswered(true);
+    if (Number(answer) === Number(question.answer)) {
+      setScore((count) => count + 1);
+      setFeedback('Correct! Great work! 🎉');
+      try {
+        await recordActivity(question.topic, user, 'maths', grade, true);
+      } catch (saveError) {
+        setActionError(`Your progress could not be saved: ${saveError.message}`);
+      }
+    } else {
+      setFeedback(`Not quite. The answer is ${question.answer}. ${question.explanation}`);
+    }
+  }
+
+  function nextQuestion() {
+    setAnswer('');
+    setFeedback('');
+    setActionError('');
+    setAnswered(false);
+    refresh();
+  }
 
   return (
-    <div style={containerStyle()}>
-      <div style={headerStyle()}>
+    <div className="page-shell activity-page" style={containerStyle()}>
+      <div className="activity-header" style={headerStyle()}>
         <h1 style={titleStyle()}>Maths Adventure 🔢</h1>
+        <p>Fresh Gemini practice for grade {grade}</p>
         <div style={levelSelectorStyle()}>
-          {Object.entries(LEVELS).map(([key, val]) => (
+          {DIFFICULTIES.map((value) => (
             <button
-              key={key}
-              onClick={() => setLevel(key)}
-              style={levelButtonStyle(level === key)}
+              key={value}
+              onClick={() => {
+                setDifficulty(value);
+                setAnswer('');
+                setFeedback('');
+                setAnswered(false);
+              }}
+              style={levelButtonStyle(difficulty === value)}
             >
-              {val.name}
+              {value[0].toUpperCase() + value.slice(1)}
             </button>
           ))}
         </div>
       </div>
 
-      <div style={cardStyle()}>
-        {question && (
+      <div className="activity-card" style={cardStyle()}>
+        {loading && <p role="status">Creating a fresh maths question…</p>}
+        {error && (
+          <div role="alert">
+            <p>{error}</p>
+            <button onClick={refresh} style={checkButtonStyle()}>Try again</button>
+          </div>
+        )}
+        {question && !loading && (
           <>
-            <div style={questionTextStyle()}>{question.text}</div>
+            <p style={topicStyle()}>{question.topic} · Grade {grade}</p>
+            <div style={questionTextStyle()}>{question.question}</div>
             <input
               type="number"
               value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
+              onChange={(event) => setAnswer(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter') checkAnswer();
+              }}
               placeholder="Your answer"
+              aria-label="Your answer"
               style={inputStyle()}
+              disabled={answered}
             />
-            <button onClick={checkAnswer} style={checkButtonStyle()}>
-              Check Answer
-            </button>
-            {feedback && <p style={feedbackStyle()}>{feedback}</p>}
+            <div>
+              <button onClick={checkAnswer} disabled={answered || !answer.trim()} style={checkButtonStyle()}>
+                Check answer
+              </button>
+              {answered && (
+                <button onClick={nextQuestion} style={nextButtonStyle()}>
+                  Next question
+                </button>
+              )}
+            </div>
+            {feedback && <p role="status" style={feedbackStyle()}>{feedback}</p>}
           </>
         )}
+        {actionError && <p role="alert" style={errorStyle()}>{actionError}</p>}
       </div>
 
       <div style={statsStyle()}>
@@ -125,8 +141,10 @@ export default function MathsAdventure({ language }) {
     return {
       display: 'flex',
       flexDirection: 'column',
+      alignItems: 'center',
       gap: '12px',
       marginBottom: '24px',
+      color: '#6B7280',
     };
   }
 
@@ -140,12 +158,7 @@ export default function MathsAdventure({ language }) {
   }
 
   function levelSelectorStyle() {
-    return {
-      display: 'flex',
-      gap: '8px',
-      justifyContent: 'center',
-      flexWrap: 'wrap',
-    };
+    return { display: 'flex', gap: '8px', justifyContent: 'center', flexWrap: 'wrap' };
   }
 
   function levelButtonStyle(active) {
@@ -154,7 +167,7 @@ export default function MathsAdventure({ language }) {
       borderRadius: '20px',
       border: active ? 'none' : '2px solid #70C9FF',
       background: active ? '#70C9FF' : '#fff',
-      color: active ? '#fff' : '#26324A',
+      color: '#26324A',
       fontWeight: '600',
       cursor: 'pointer',
       fontFamily: 'inherit',
@@ -167,30 +180,34 @@ export default function MathsAdventure({ language }) {
       borderRadius: '24px',
       padding: '32px',
       boxShadow: '0 4px 12px rgba(38,50,74,0.12)',
-      maxWidth: '500px',
+      maxWidth: '600px',
+      width: '100%',
       margin: '0 auto',
       textAlign: 'center',
+      color: '#26324A',
     };
+  }
+
+  function topicStyle() {
+    return { color: '#6B7280', fontWeight: 600 };
   }
 
   function questionTextStyle() {
     return {
-      fontSize: '2rem',
-      fontWeight: '700',
-      color: '#26324A',
-      marginBottom: '20px',
+      fontSize: '1.6rem',
+      fontWeight: 700,
+      margin: '16px 0 20px',
       fontFamily: "'Fredoka', sans-serif",
     };
   }
 
   function inputStyle() {
     return {
-      padding: '14px 18px',
-      fontSize: '1.5rem',
+      padding: '12px',
+      fontSize: '1.25rem',
       border: '2px solid #e5e7eb',
       borderRadius: '12px',
-      width: '100%',
-      maxWidth: '120px',
+      width: '140px',
       marginBottom: '16px',
       textAlign: 'center',
       fontFamily: 'inherit',
@@ -202,22 +219,28 @@ export default function MathsAdventure({ language }) {
       background: '#FFD95A',
       color: '#26324A',
       border: 'none',
-      padding: '12px 28px',
+      padding: '12px 24px',
       borderRadius: '12px',
-      fontWeight: '600',
-      fontSize: '1rem',
+      fontWeight: 600,
       cursor: 'pointer',
       fontFamily: 'inherit',
     };
   }
 
-  function feedbackStyle() {
+  function nextButtonStyle() {
     return {
-      marginTop: '12px',
-      fontSize: '1rem',
-      color: '#26324A',
-      fontWeight: '500',
+      ...checkButtonStyle(),
+      background: '#70C9FF',
+      marginLeft: '10px',
     };
+  }
+
+  function feedbackStyle() {
+    return { marginTop: '16px', lineHeight: 1.5 };
+  }
+
+  function errorStyle() {
+    return { color: '#9B2C2C', marginTop: '12px' };
   }
 
   function statsStyle() {

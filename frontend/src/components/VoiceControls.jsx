@@ -19,14 +19,14 @@ export default function VoiceControls({
 
   if (!canSpeak && !canListen) {
     return (
-      <div style={unsupportedStyle()}>
+      <div className="voice-controls voice-controls--unsupported" style={unsupportedStyle()}>
         Voice features not available in this browser. You can still type and chat!
       </div>
     );
   }
 
   return (
-    <div style={containerStyle()}>
+    <div className="voice-controls" style={containerStyle()}>
       <button
         onClick={speaking ? onStop : onSpeak}
         aria-label="Read aloud"

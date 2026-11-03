@@ -1,20 +1,16 @@
 # StudIQ
 
-A kid-friendly AI learning companion for children aged 6–10. Built with React, Vite, Node.js, Express, and Gemini.
+A kid-friendly AI learning companion with fresh Gemini activities for grades 5–9. Built with React, Vite, Node.js, Express, and Gemini.
 
 ## Features
 
 - **Chat with StudIQ** — Friendly AI conversations (Hinglish + Simple English)
-- **Maths Adventure** — Addition, subtraction, multiplication practice
-- **Science Explorer** — Curated science facts about space, animals, plants
-- **English Practice** — Vocabulary with Hindi translations
-- **General Knowledge Quiz** — Local question bank with explanations
-- **Brain Gym** — Riddles and logic puzzles
-- **Story Time** — Curated short stories with morals
-- **My Progress** — Local progress tracking via localStorage
+- **Maths Adventure, Science Explorer, English Practice, GK Quiz, Brain Gym, and Story Time** — Fresh, grade-aware Gemini activities for grades 5–9
+- **Fresh content** — Avoids the last 100 activity labels for each activity, per guest browser or guardian account
+- **My Progress** — Tracks completed activities, quiz scores, and topics; saves locally for guests or syncs to Firestore when a guardian signs in
+- **Guardian Google sign-in** — Optional; children can continue as guests
 - **Settings** — Language preference, privacy info, reset progress
 - **Voice** — Optional browser speech synthesis and recognition
-- **Local-first** — All learning games work without a Gemini API key
 
 ## Architecture
 
@@ -82,18 +78,26 @@ Open the local URL printed by Vite (usually `http://localhost:5173`).
 
 Press `Ctrl+C` in each terminal to stop the backend and frontend.
 
-## What Works Without an API Key
+## Learning Activities and Progress
 
-All local learning features work immediately:
-- Maths Adventure
-- Science Explorer
-- English Practice
-- General Knowledge Quiz
-- Brain Gym (riddles)
-- Story Time
-- My Progress
+The six learning activities (maths, science, English, general knowledge quiz, brain gym, and stories) use Gemini to generate new grade 5–9 content. Configure `GEMINI_API_KEY` on the backend; these activities show an explicit setup or API error rather than repeating bundled examples when Gemini is unavailable. The chat experience is unchanged and retains its local fallback.
 
-The chat feature uses local fallback responses when Gemini is not configured.
+Guests can use the activities without signing in. Guest progress and recent activity labels stay in that browser. A parent or guardian can optionally sign in with Google from the dashboard to sync progress and repeat-prevention history across devices.
+
+### Firebase setup for optional guardian sign-in
+
+1. Create a Firebase project on the no-cost Spark plan, register a Web app, enable **Google** under Authentication providers, and create a Cloud Firestore database.
+2. Publish the repository's [`firestore.rules`](./firestore.rules) in Firestore's Rules tab.
+3. Copy `frontend/.env.example` to `frontend/.env` and fill in the Firebase Web app configuration values. These are client configuration values; protect Firestore with the supplied rules.
+4. Add the same `VITE_FIREBASE_*` values to the Vercel project and redeploy. Add your local and deployed domains to Firebase Authentication's authorized domains.
+
+Firebase Spark includes no-cost quotas and does not require a payment method; see [Firebase pricing](https://firebase.google.com/pricing). Quotas can change and usage beyond them may require a billing plan. Gemini API usage is separate and may have its own pricing or limits.
+
+See [docs/SETUP.md](./docs/SETUP.md) and [docs/PRIVACY.md](./docs/PRIVACY.md) for setup and data-handling details.
+
+## What Works Without a Gemini API Key
+
+Guest progress reporting works locally. The six generated learning activities require a configured Gemini API key. Chat continues to use its local fallback when Gemini is not configured.
 
 ## Deploy to Vercel
 

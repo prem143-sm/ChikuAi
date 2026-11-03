@@ -12,9 +12,12 @@ export default function FeatureCard({ icon, title, description, onClick }) {
         }
       }}
     >
-      <span className="feature-icon">{icon}</span>
-      <h3>{title}</h3>
-      <p>{description}</p>
+      <span className="feature-icon" aria-hidden="true">{icon}</span>
+      <div className="feature-card-copy">
+        <h3>{title}</h3>
+        <p>{description}</p>
+      </div>
+      <span className="feature-card-arrow" aria-hidden="true">→</span>
     </div>
   );
 }

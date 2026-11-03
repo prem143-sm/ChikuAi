@@ -1,33 +1,79 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getProgress, resetProgress } from '../services/progress';
 
-export default function Progress() {
-  const progress = getProgress();
-
+export default function Progress({ user }) {
+  const [progress, setProgress] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [resetConfirm, setResetConfirm] = useState(false);
 
-  function handleReset() {
-    if (resetConfirm) {
-      resetProgress();
-      window.location.reload();
-    } else {
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    getProgress(user).then((value) => {
+      if (active) {
+        setProgress(value);
+        setError('');
+      }
+    }).catch((loadError) => {
+      if (active) setError(`Progress could not be loaded: ${loadError.message}`);
+    }).finally(() => {
+      if (active) setLoading(false);
+    });
+    return () => {
+      active = false;
+    };
+  }, [user]);
+
+  async function handleReset() {
+    if (!resetConfirm) {
       setResetConfirm(true);
+      return;
+    }
+    setError('');
+    try {
+      await resetProgress(user);
+      setProgress(await getProgress(user));
+      setResetConfirm(false);
+    } catch (resetError) {
+      setError(`Progress could not be reset: ${resetError.message}`);
     }
   }
 
+  const summary = progress || {
+    quizzesCompleted: 0,
+    correctAnswers: 0,
+    activitiesCompleted: 0,
+    topicsExplored: [],
+    activityCounts: {},
+    grade: '5',
+  };
   const stats = [
-    { value: progress.quizzesCompleted, label: 'Quizzes Completed' },
-    { value: progress.correctAnswers, label: 'Correct Answers' },
-    { value: progress.activitiesCompleted, label: 'Activities Done' },
-    { value: progress.topicsExplored.length, label: 'Topics Explored' },
+    { value: summary.quizzesCompleted, label: 'Quizzes Completed' },
+    { value: summary.correctAnswers, label: 'Correct Quiz & Maths Answers' },
+    { value: summary.activitiesCompleted, label: 'Activities Done' },
+    { value: summary.topicsExplored.length, label: 'Topics Explored' },
   ];
+  const activityNames = {
+    maths: 'Maths questions',
+    science: 'Science lessons',
+    english: 'English practices',
+    quiz: 'General knowledge quizzes',
+    brain: 'Brain Gym puzzles',
+    story: 'Stories read',
+  };
 
   return (
-    <div style={containerStyle()}>
-      <div style={headerStyle()}>
+    <div className="page-shell progress-page" style={containerStyle()}>
+      <div className="page-heading" style={headerStyle()}>
         <h1 style={titleStyle()}>My Progress 🏆</h1>
+        <p style={progressSourceStyle()}>
+          {user ? 'Saved to your guardian account and synced across devices.' : 'Guest report saved on this device. A guardian can sign in from the dashboard to sync it.'}
+        </p>
       </div>
 
+      {loading && <p role="status">Loading your learning report…</p>}
+      {error && <p role="alert" style={errorStyle()}>{error}</p>}
       <div style={statsContainerStyle()}>
         {stats.map((stat, i) => (
           <div key={i} className="progress-stat">
@@ -37,25 +83,42 @@ export default function Progress() {
         ))}
       </div>
 
-      <div style={topicsStyle()}>
+      <div className="report-card" style={topicsStyle()}>
         <h3 style={topicsTitleStyle()}>Topics Explored</h3>
-        {progress.topicsExplored.length === 0 ? (
+        {summary.topicsExplored.length === 0 ? (
           <p style={emptyTopicsStyle()}>
             No topics yet. Start exploring with StudIQ!
           </p>
         ) : (
           <div style={topicsListStyle()}>
-            {progress.topicsExplored.map((topic, i) => (
+            {summary.topicsExplored.map((topic, i) => (
               <span key={i} style={topicChipStyle()}>{topic}</span>
             ))}
           </div>
         )}
       </div>
 
+      <div className="report-card" style={activityReportStyle()}>
+        <h3 style={topicsTitleStyle()}>Activities by type</h3>
+        <p style={gradeLabelStyle()}>Selected grade: {summary.grade}</p>
+        {Object.keys(activityNames).map((activity) => (
+          <div key={activity} style={activityRowStyle()}>
+            <span>{activityNames[activity]}</span>
+            <strong>{summary.activityCounts[activity] || 0}</strong>
+          </div>
+        ))}
+        {summary.lastQuiz && (
+          <p style={lastQuizStyle()}>
+            Latest quiz: {summary.lastQuiz.score} / {summary.lastQuiz.total} correct (Grade {summary.lastQuiz.grade})
+          </p>
+        )}
+      </div>
+
       <div style={resetSectionStyle()}>
-        <button onClick={handleReset} style={resetButtonStyle()}>
+        <button onClick={handleReset} disabled={loading} style={resetButtonStyle()}>
           {resetConfirm ? 'Click again to confirm reset' : 'Reset Progress'}
         </button>
+        {resetConfirm && <button onClick={() => setResetConfirm(false)} style={cancelButtonStyle()}>Cancel</button>}
       </div>
     </div>
   );
@@ -74,6 +137,14 @@ export default function Progress() {
     return {
       marginBottom: '24px',
     };
+  }
+
+  function progressSourceStyle() {
+    return { color: '#6B7280', marginTop: '8px', lineHeight: 1.5 };
+  }
+
+  function errorStyle() {
+    return { color: '#9B2C2C', textAlign: 'center', marginBottom: '16px' };
   }
 
   function titleStyle() {
@@ -147,6 +218,30 @@ export default function Progress() {
     };
   }
 
+  function activityReportStyle() {
+    return {
+      background: '#fff',
+      borderRadius: '24px',
+      padding: '24px',
+      boxShadow: '0 4px 12px rgba(38,50,74,0.12)',
+      maxWidth: '600px',
+      width: '100%',
+      margin: '24px auto 0',
+    };
+  }
+
+  function activityRowStyle() {
+    return { display: 'flex', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid rgba(38,50,74,0.08)' };
+  }
+
+  function gradeLabelStyle() {
+    return { color: '#6B7280', margin: '0 0 12px' };
+  }
+
+  function lastQuizStyle() {
+    return { margin: '16px 0 0', color: '#6B7280' };
+  }
+
   function resetButtonStyle() {
     return {
       background: resetConfirm ? '#FF8E8E' : '#f0f0f0',
@@ -158,5 +253,9 @@ export default function Progress() {
       cursor: 'pointer',
       fontFamily: 'inherit',
     };
+  }
+
+  function cancelButtonStyle() {
+    return { marginLeft: '10px', padding: '12px 20px', borderRadius: '12px', border: '2px solid #70C9FF', color: '#26324A' };
   }
 }

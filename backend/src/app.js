@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
 const chatRoutes = require('./routes/chat');
+const activityRoutes = require('./routes/activities');
 const healthRoutes = require('./routes/health');
 const errorHandler = require('./middleware/error-handler');
 
@@ -31,6 +32,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/health', healthRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/activities', activityRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ success: false, error: 'Not found' });

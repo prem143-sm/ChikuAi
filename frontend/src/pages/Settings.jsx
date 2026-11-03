@@ -1,11 +1,14 @@
 import { useState } from 'react';
+import { resetProgress } from '../services/progress';
 
-export default function Settings({ language, setLanguage }) {
+export default function Settings({ language, setLanguage, user }) {
   const [localLang, setLocalLang] = useState(language);
+  const [resetError, setResetError] = useState('');
+  const [resetting, setResetting] = useState(false);
 
   return (
-    <div style={containerStyle()}>
-      <div style={headerStyle()}>
+    <div className="page-shell settings-page" style={containerStyle()}>
+      <div className="page-heading" style={headerStyle()}>
         <h1 style={titleStyle()}>Settings ⚙</h1>
         <p style={subtitleStyle()}>
           Parents can manage preferences here.
@@ -15,13 +18,27 @@ export default function Settings({ language, setLanguage }) {
       <div className="settings-section">
         <h3>AI & Learning</h3>
         <div style={settingsRowStyle()}>
-          <span>AI Conversation</span>
-          <span style={statusTextStyle()}>Available with a valid Gemini API key</span>
+          <span>AI Learning Activities</span>
+          <span style={statusTextStyle()}>Gemini-generated for grades 5–9</span>
         </div>
         <div style={settingsRowStyle()}>
-          <span>Local Learning</span>
-          <span style={statusTextStyle()}>Available offline</span>
+          <span>Fresh content</span>
+          <span style={statusTextStyle()}>Avoids repeating the latest 100 items per activity</span>
         </div>
+      </div>
+
+      <div className="settings-section">
+        <h3>Progress and account</h3>
+        <div style={settingsRowStyle()}>
+          <span>Progress storage</span>
+          <span style={statusTextStyle()}>
+            {user ? 'Synced to guardian Google account' : 'Guest mode: saved in this browser'}
+          </span>
+        </div>
+        <p style={statusTextStyle()}>
+          Google sign-in is optional and intended for a parent or guardian. Do not enter a child’s personal details.
+        </p>
+        {resetError && <p role="alert" style={errorTextStyle()}>{resetError}</p>}
       </div>
 
       <div className="settings-section">
@@ -53,8 +70,14 @@ export default function Settings({ language, setLanguage }) {
           <span style={statusTextStyle()}>Not stored permanently</span>
         </div>
         <div style={settingsRowStyle()}>
-          <span>Personal Data</span>
-          <span style={statusTextStyle()}>None collected</span>
+          <span>Child personal data</span>
+          <span style={statusTextStyle()}>Not requested or stored</span>
+        </div>
+        <div style={settingsRowStyle()}>
+          <span>Guardian account</span>
+          <span style={statusTextStyle()}>
+            {user ? 'Google/Firebase handles sign-in; email is not in progress records' : 'Optional; use a guardian Google account'}
+          </span>
         </div>
       </div>
 
@@ -63,21 +86,28 @@ export default function Settings({ language, setLanguage }) {
         <div style={settingsRowStyle()}>
           <span>Reset Learning Progress</span>
           <button
-            onClick={() => {
-              if (window.confirm('Reset all progress?')) {
-                localStorage.removeItem('StudIQ-progress');
-                window.location.reload();
+            disabled={resetting}
+            onClick={async () => {
+              if (!window.confirm('Reset all progress for this profile?')) return;
+              setResetting(true);
+              setResetError('');
+              try {
+                await resetProgress(user);
+              } catch (error) {
+                setResetError(`Progress could not be reset: ${error.message}`);
+              } finally {
+                setResetting(false);
               }
             }}
             style={resetButtonStyle()}
           >
-            Reset
+            {resetting ? 'Resetting…' : 'Reset'}
           </button>
         </div>
       </div>
 
       <div style={footerStyle()}>
-        <p>StudIQ is for children aged 6–10. Always supervise online activity.</p>
+        <p>StudIQ learning content is designed for grades 5–9. A parent or guardian should supervise online use.</p>
       </div>
     </div>
   );
@@ -129,7 +159,12 @@ export default function Settings({ language, setLanguage }) {
     return {
       fontSize: '0.9rem',
       color: '#6B7280',
+      lineHeight: 1.5,
     };
+  }
+
+  function errorTextStyle() {
+    return { color: '#9B2C2C', marginTop: '12px' };
   }
 
   function languageToggleStyle() {

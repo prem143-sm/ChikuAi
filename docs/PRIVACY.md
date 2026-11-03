@@ -1,36 +1,40 @@
-# StudIQ — Privacy Notice
+# StudIQ Privacy Notice
 
 ## Who This Is For
 
-StudIQ is designed for children aged 6–10. It is a local-first learning companion.
+StudIQ provides learning activities for grades 5–9. A parent or guardian should supervise a child's use.
 
-## What We Collect
+## Guest Use
 
-- **No personal information** — We do not ask for names, addresses, phone numbers, school names, or passwords.
-- **No accounts** — No registration or login is required.
-- **No tracking** — We do not use analytics, cookies, or third-party trackers.
-- **No ads** — There are no advertisements.
+- Sign-in is optional. Guest activity does not require a child's name, email, school, or other identifying details.
+- Guest progress and the latest 100 generated activity labels per activity are stored in that browser's local storage.
+- Chat messages are held only in the current page session and are not saved as a progress report.
 
-## What Is Stored Locally
+## Optional Guardian Google Sign-In
 
-- **Learning progress** — Quiz scores and activity completion are saved in your browser's localStorage only. This data never leaves your device.
-- **Chat messages** — Not stored permanently by default. They exist only during your current session.
+- Google sign-in is intended for a parent or guardian, not for a child to create an account.
+- Google and Firebase Authentication process the guardian's Google account information. StudIQ does not copy the guardian's email address into its Firestore progress documents.
+- When signed in, the Firebase user ID is used to scope the guardian's progress and recent activity labels in Firestore. These documents contain learning totals, explored topics, selected grade, recent generated activity labels, and the most recent quiz result.
+- Firestore access is restricted by `firestore.rules` to the authenticated account that owns the document. Review and publish those rules in your Firebase project before enabling sign-in.
+- Signing in merges existing guest progress and recent labels from that browser into the guardian's account.
+- Reset Progress clears the current progress report. Guardian account deletion and any associated Firebase Auth data must be managed by the project operator in Firebase.
 
 ## Gemini API Usage
 
-When you use the chat feature with a configured Gemini API key:
-- Messages are sent to Google's Gemini API from the backend server.
-- The API key stays in the backend `.env` file. It is never sent to the browser.
-- Chat messages are sent to Gemini for processing. Do not share personal information in chat.
-- The API key and raw API responses are never logged or exposed.
+- Chat messages are sent to Google's Gemini API from the backend when Gemini is configured; chat behavior is otherwise unchanged.
+- Maths, science, English practice, general knowledge quiz, brain gym, and story requests send the selected grade, language, activity type, and recent activity labels to the backend for generation. The Gemini API key stays on the backend.
+- No Google account email or Firebase user ID is sent to Gemini by the learning activity request.
+- Google processes API requests under its applicable terms and data policies. Do not enter personal information into chat or learning activities.
+- Gemini usage has separate quotas and possible costs from Firebase.
+
+## Data Controls
+
+- Guests can reset the progress report in the app's Progress page or Settings.
+- Signed-in guardians can reset their Firestore progress report in the app. The separate recent-label history is retained to help avoid repeated content.
+- The project operator is responsible for Firebase project configuration, security rules, retention, and account deletion.
 
 ## Safety
 
-- StudIQ identifies itself as an AI, not a real person.
-- Age-appropriate content filters are applied.
-- Unsafe requests receive a safe refusal response.
-- Children are encouraged to talk to trusted adults about serious concerns.
-
-## Contact
-
-For privacy questions, please contact the parent or operator who set up this application.
+- StudIQ identifies itself as an AI learning companion.
+- Generated material is requested to be child-appropriate and checked by application-level validation; automated checks cannot guarantee every response is suitable. A parent or guardian should supervise.
+- Unsafe requests should receive a safe refusal response. Children should talk to trusted adults about serious concerns.

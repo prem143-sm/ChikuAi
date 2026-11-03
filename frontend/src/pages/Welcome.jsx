@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import StudIQMascot from '../components/StudIQMascot';
 
-export default function Welcome({ onStart, setLanguage }) {
+export default function Welcome({ onStart, setLanguage, grade, onGradeChange }) {
   const [language, setLocalLanguage] = useState('english');
 
   const languages = [
@@ -11,12 +11,13 @@ export default function Welcome({ onStart, setLanguage }) {
   ];
 
   return (
-    <div style={containerStyle()}>
-      <div style={cardStyle()}>
+    <div className="page-shell welcome-page" style={containerStyle()}>
+      <div className="welcome-card" style={cardStyle()}>
+        <p className="dashboard-eyebrow">YOUR FRIENDLY LEARNING SPACE</p>
         <StudIQMascot expression="happy" />
         <h1 style={titleStyle()}>Welcome to StudIQ! 👋</h1>
         <p style={subtitleStyle()}>
-          Your friendly AI learning buddy.
+          Learn, explore & have fun!
         </p>
 
         <div style={languageSectionStyle()}>
@@ -37,12 +38,25 @@ export default function Welcome({ onStart, setLanguage }) {
           </div>
         </div>
 
+        <div className="welcome-grade-picker">
+          <label htmlFor="welcome-grade">School grade</label>
+          <select
+            id="welcome-grade"
+            value={grade}
+            onChange={(event) => onGradeChange(event.target.value)}
+          >
+            {['5', '6', '7', '8', '9'].map((value) => (
+              <option key={value} value={value}>Grade {value}</option>
+            ))}
+          </select>
+        </div>
+
         <button onClick={onStart} style={startButtonStyle()}>
           Let's Learn Together!
         </button>
 
         <p style={privacyStyle()}>
-          StudIQ is an AI learning companion. No personal information is needed to play.
+          Learning is free to explore as a guest. A parent or guardian may sign in to sync progress.
         </p>
       </div>
     </div>

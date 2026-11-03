@@ -12,37 +12,37 @@ const FEATURES = [
   {
     icon: '🔢',
     title: 'Maths Adventure',
-    description: 'Practice counting, addition, and more.',
+    description: 'Fresh grade-level questions with helpful explanations.',
     route: 'maths',
   },
   {
     icon: '🔬',
     title: 'Science Explorer',
-    description: 'Discover fun facts about space, animals, and nature.',
+    description: 'Explore fresh, grade-level science lessons.',
     route: 'science',
   },
   {
     icon: '📚',
     title: 'English Practice',
-    description: 'Learn words, sentences, and grammar.',
+    description: 'Practice a new word and English challenge each time.',
     route: 'english',
   },
   {
     icon: '🧠',
     title: 'General Knowledge Quiz',
-    description: 'Test your knowledge with fun quizzes.',
+    description: 'Try a fresh five-question quiz for your grade.',
     route: 'quiz',
   },
   {
     icon: '🧩',
     title: 'Brain Gym',
-    description: 'Riddles, patterns, and logic puzzles.',
+    description: 'Solve a new logic puzzle with a hint.',
     route: 'brain',
   },
   {
     icon: '📖',
     title: 'Story Time',
-    description: 'Read cute stories with morals.',
+    description: 'Read a new original story for your grade.',
     route: 'story',
   },
   {
@@ -53,7 +53,17 @@ const FEATURES = [
   },
 ];
 
-export default function Home({ onNavigate, language }) {
+export default function Home({
+  onNavigate,
+  language,
+  grade,
+  user,
+  onSignIn,
+  onSignOut,
+  authBusy,
+  authError,
+  firebaseConfigured,
+}) {
   const [suggestion, setSuggestion] = useState(
     "Today's suggestion: Try Chat with StudIQ!"
   );
@@ -73,21 +83,59 @@ export default function Home({ onNavigate, language }) {
   }, []);
 
   return (
-    <div style={containerStyle()}>
-      <div style={headerStyle()}>
+    <div className="page-shell dashboard-page" style={containerStyle()}>
+      <div className="dashboard-header" style={headerStyle()}>
         <StudIQMascot expression="happy" />
-        <div>
+        <div className="dashboard-heading">
+          <p className="dashboard-eyebrow">YOUR NEXT BIG IDEA STARTS HERE</p>
           <h1 style={titleStyle()}>StudIQ Learning World</h1>
-          <p style={subtitleStyle()}>Pick an adventure, {language} learner!</p>
+          <p style={subtitleStyle()}>Learn, explore & have fun, Grade {grade} learner!</p>
         </div>
-        <button style={settingsButtonStyle()} onClick={() => onNavigate('settings')} aria-label="Settings">
-          ⚙
-        </button>
+        <div style={headerActionsStyle()}>
+          <button
+            className="dashboard-settings-button"
+            style={settingsButtonStyle()}
+            onClick={() => onNavigate('settings')}
+            aria-label="Settings"
+          >
+            ⚙
+          </button>
+          {user ? (
+            <div style={accountControlsStyle()}>
+              <span style={accountLabelStyle()}>Guardian account connected</span>
+              <button onClick={onSignOut} disabled={authBusy} style={accountButtonStyle()}>
+                {authBusy ? 'Please wait…' : 'Sign out'}
+              </button>
+              {authError && <p className="account-status account-status--error" role="status">{authError}</p>}
+            </div>
+          ) : (
+            <div style={accountControlsStyle()}>
+              <button
+                onClick={onSignIn}
+                disabled={authBusy || !firebaseConfigured}
+                style={accountButtonStyle()}
+              >
+                {authBusy ? 'Please wait…' : 'Sign in with Google'}
+              </button>
+              <p className="account-status" role="status">
+                {authError || (firebaseConfigured
+                  ? 'Optional guardian sign-in for cloud progress'
+                  : 'Guest progress stays on this device')}
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
-      <p style={suggestionStyle()}>{suggestion}</p>
+      <div className="dashboard-section-heading">
+        <div>
+          <p className="dashboard-eyebrow">CHOOSE YOUR ADVENTURE</p>
+          <h2>What would you like to learn today?</h2>
+        </div>
+        <p className="dashboard-suggestion" style={suggestionStyle()}>{suggestion}</p>
+      </div>
 
-      <div style={gridStyle()}>
+      <div className="feature-grid" style={gridStyle()}>
         {FEATURES.map((feature) => (
           <FeatureCard
             key={feature.route}
@@ -99,8 +147,8 @@ export default function Home({ onNavigate, language }) {
         ))}
       </div>
 
-      <div style={footerStyle()}>
-        <p>Made with ❤️ for curious kids aged 6–10</p>
+      <div className="dashboard-footer" style={footerStyle()}>
+        <p>Made with ❤️ for curious learners in grades 5–9</p>
       </div>
     </div>
   );
@@ -120,7 +168,44 @@ export default function Home({ onNavigate, language }) {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-between',
+      flexWrap: 'wrap',
+      gap: '16px',
       marginBottom: '24px',
+    };
+  }
+
+  function headerActionsStyle() {
+    return {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '12px',
+      flexWrap: 'wrap',
+      marginLeft: 'auto',
+    };
+  }
+
+  function accountControlsStyle() {
+    return {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-end',
+      gap: '4px',
+    };
+  }
+
+  function accountLabelStyle() {
+    return { color: '#6B7280', fontSize: '0.78rem' };
+  }
+
+  function accountButtonStyle() {
+    return {
+      border: '2px solid #70C9FF',
+      borderRadius: '12px',
+      background: '#fff',
+      color: '#26324A',
+      padding: '9px 14px',
+      fontWeight: '600',
+      cursor: 'pointer',
     };
   }
 

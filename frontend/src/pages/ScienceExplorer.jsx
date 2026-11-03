@@ -1,44 +1,55 @@
 import { useState } from 'react';
-import scienceFacts from '../data/science-facts.json';
+import useGeneratedActivity from '../hooks/useGeneratedActivity';
 import { recordActivity } from '../services/progress';
 
-export default function ScienceExplorer({ language }) {
-  const [currentIndex, setCurrentIndex] = useState(0);
+export default function ScienceExplorer({ language, grade, user }) {
+  const [actionError, setActionError] = useState('');
+  const [saving, setSaving] = useState(false);
+  const { item: fact, loading, error, refresh } = useGeneratedActivity('science', grade, language, user);
 
-  const fact = scienceFacts[currentIndex];
+  async function nextFact() {
+    if (saving || loading) return;
+    setActionError('');
+    setSaving(true);
+    if (fact) {
+      try {
+        await recordActivity(fact.topic, user, 'science', grade);
+      } catch (saveError) {
+        setActionError(`Your progress could not be saved: ${saveError.message}`);
+        setSaving(false);
+        return;
+      }
+    }
+    refresh();
+    setSaving(false);
+  }
 
   return (
-    <div style={containerStyle()}>
-      <div style={headerStyle()}>
+    <div className="page-shell activity-page" style={containerStyle()}>
+      <div className="activity-header" style={headerStyle()}>
         <h1 style={titleStyle()}>Science Explorer 🔬</h1>
+        <p>Fresh Gemini science for grade {grade}</p>
       </div>
 
-      <div style={cardStyle()}>
-        <div style={topicStyle()}>{fact.topic}</div>
-        <h2 style={factTitleStyle()}>{fact.title}</h2>
-        <p style={factTextStyle()}>{fact.text}</p>
-        {fact.question && (
-          <p style={questionStyle()}>💬 {fact.question}</p>
+      <div className="activity-card" style={cardStyle()}>
+        {loading && <p role="status">Creating a fresh science lesson…</p>}
+        {error && <div role="alert"><p>{error}</p><button onClick={refresh} style={navButtonStyle()}>Try again</button></div>}
+        {fact && !loading && (
+          <>
+            <div style={topicStyle()}>{fact.topic} · Grade {grade}</div>
+            <h2 style={factTitleStyle()}>{fact.title}</h2>
+            <p style={factTextStyle()}>{fact.text}</p>
+            {fact.question && <p style={questionStyle()}>💬 {fact.question}</p>}
+          </>
         )}
       </div>
 
       <div style={navStyle()}>
-        <button
-          onClick={() => { recordActivity(fact.topic); setCurrentIndex((i) => (i === 0 ? scienceFacts.length - 1 : i - 1)); }}
-          style={navButtonStyle()}
-        >
-          ← Previous
-        </button>
-        <span style={counterStyle()}>
-          {currentIndex + 1} of {scienceFacts.length}
-        </span>
-        <button
-          onClick={() => { recordActivity(fact.topic); setCurrentIndex((i) => (i === scienceFacts.length - 1 ? 0 : i + 1)); }}
-          style={navButtonStyle()}
-        >
-          Next →
+        <button onClick={nextFact} disabled={loading || saving || !fact} style={navButtonStyle()}>
+          {saving ? 'Saving…' : 'I learned this — Next fact →'}
         </button>
       </div>
+      {actionError && <p role="alert" style={questionStyle()}>{actionError}</p>}
     </div>
   );
 
@@ -55,6 +66,8 @@ export default function ScienceExplorer({ language }) {
   function headerStyle() {
     return {
       marginBottom: '24px',
+      textAlign: 'center',
+      color: '#6B7280',
     };
   }
 

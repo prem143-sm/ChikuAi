@@ -1,53 +1,73 @@
-import { useState } from 'react';
-import vocabulary from '../data/vocabulary.json';
+import { useEffect, useState } from 'react';
+import useGeneratedActivity from '../hooks/useGeneratedActivity';
+import { recordActivity } from '../services/progress';
 
-export default function EnglishPractice({ language }) {
-  const [wordIndex, setWordIndex] = useState(0);
+export default function EnglishPractice({ language, grade, user }) {
   const [showTranslation, setShowTranslation] = useState(false);
+  const [completed, setCompleted] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [actionError, setActionError] = useState('');
+  const { item: word, loading, error, refresh } = useGeneratedActivity('english', grade, language, user);
 
-  const word = vocabulary[wordIndex];
+  useEffect(() => {
+    setShowTranslation(false);
+    setCompleted(false);
+  }, [word]);
+
+  async function markPracticed() {
+    if (!word || completed || saving) return;
+    setActionError('');
+    setSaving(true);
+    try {
+      await recordActivity('English vocabulary', user, 'english', grade);
+      setCompleted(true);
+    } catch (saveError) {
+      setActionError(`Your progress could not be saved: ${saveError.message}`);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function nextWord() {
+    setShowTranslation(false);
+    setCompleted(false);
+    refresh();
+  }
 
   return (
-    <div style={containerStyle()}>
-      <div style={headerStyle()}>
+    <div className="page-shell activity-page" style={containerStyle()}>
+      <div className="activity-header" style={headerStyle()}>
         <h1 style={titleStyle()}>English Practice 📚</h1>
+        <p>Fresh Gemini vocabulary for grade {grade}</p>
       </div>
 
-      <div style={cardStyle()}>
-        <div style={wordStyle()}>{word.word}</div>
-        {showTranslation && (
-          <div style={hindiStyle()}>
-            {word.hindi} — {word.hindiSentence}
-          </div>
+      <div className="activity-card" style={cardStyle()}>
+        {loading && <p role="status">Creating a fresh vocabulary activity…</p>}
+        {error && <div role="alert"><p>{error}</p><button onClick={refresh} style={navButtonStyle()}>Try again</button></div>}
+        {word && !loading && (
+          <>
+            <p style={readingLevelStyle()}>Grade {grade} vocabulary</p>
+            <div style={wordStyle()}>{word.word}</div>
+            <div style={sentenceStyle()}>"{word.sentence}"</div>
+            <p style={challengeStyle()}>{word.challenge}</p>
+            {showTranslation && (
+              <div style={hindiStyle()}>
+                {word.meaning} · हिन्दी: {word.hindi}
+              </div>
+            )}
+            <button onClick={() => setShowTranslation((visible) => !visible)} style={toggleButtonStyle()}>
+              {showTranslation ? 'Hide meaning' : 'Show meaning'}
+            </button>
+            <div style={actionRowStyle()}>
+              <button onClick={markPracticed} disabled={completed || saving} style={navButtonStyle()}>
+                {saving ? 'Saving…' : completed ? 'Practiced ✓' : 'I practiced this'}
+              </button>
+              {completed && <button onClick={nextWord} style={navButtonStyle()}>Next word →</button>}
+            </div>
+          </>
         )}
-        <div style={sentenceStyle()}>
-          "{word.sentence}"
-        </div>
-        <button
-          onClick={() => setShowTranslation(!showTranslation)}
-          style={toggleButtonStyle()}
-        >
-          {showTranslation ? 'Hide Hindi' : 'Show Hindi'}
-        </button>
       </div>
-
-      <div style={navStyle()}>
-        <button
-          onClick={() => setWordIndex((i) => (i === 0 ? vocabulary.length - 1 : i - 1))}
-          style={navButtonStyle()}
-        >
-          ← Previous
-        </button>
-        <span style={counterStyle()}>
-          {wordIndex + 1} of {vocabulary.length}
-        </span>
-        <button
-          onClick={() => setWordIndex((i) => (i === vocabulary.length - 1 ? 0 : i + 1))}
-          style={navButtonStyle()}
-        >
-          Next →
-        </button>
-      </div>
+      {actionError && <p role="alert" style={actionErrorStyle()}>{actionError}</p>}
     </div>
   );
 
@@ -64,6 +84,8 @@ export default function EnglishPractice({ language }) {
   function headerStyle() {
     return {
       marginBottom: '24px',
+      textAlign: 'center',
+      color: '#6B7280',
     };
   }
 
@@ -105,6 +127,22 @@ export default function EnglishPractice({ language }) {
       marginBottom: '16px',
       fontWeight: '500',
     };
+  }
+
+  function readingLevelStyle() {
+    return { color: '#70C9FF', fontWeight: 700 };
+  }
+
+  function challengeStyle() {
+    return { color: '#6B7280', margin: '0 0 16px', lineHeight: 1.5 };
+  }
+
+  function actionRowStyle() {
+    return { display: 'flex', justifyContent: 'center', flexWrap: 'wrap', gap: '10px', marginTop: '16px' };
+  }
+
+  function actionErrorStyle() {
+    return { textAlign: 'center', color: '#9B2C2C' };
   }
 
   function sentenceStyle() {
